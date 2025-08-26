@@ -13,7 +13,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
     :root {
-      /* высота окна для iOS/Android */
+      /* стабильная высота окна для мобилок */
       --app-height: 100dvh;
     }
 
@@ -27,6 +27,8 @@
       overflow: hidden;             /* перелистываем, не скроллим весь документ */
       overscroll-behavior: none;
       -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     /* СЛАЙДЫ */
@@ -45,6 +47,14 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+    }
+
+    /* внутренний скролл на мобильных и низких экранах */
+    .slide.scrollable {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      scroll-padding-bottom: 88px; /* чтобы ничего не пряталось за индикаторы/стрелки */
     }
 
     /* лёгкий фон-паттерн (не мешает кликам) */
@@ -69,14 +79,14 @@
       box-shadow: 0 18px 42px rgba(0,0,0,.10);
     }
 
-    /* старая «modern glow» — вернул */
+    /* пульсация упаковки */
     .modern-glow { animation: modernPulse 3s ease-in-out infinite; }
     @keyframes modernPulse {
       0%,100% { transform: scale(1); filter: brightness(1); }
       50%     { transform: scale(1.02); filter: brightness(1.06); }
     }
 
-    /* плавное появление при переключении — как раньше */
+    /* плавное появление при переключении */
     .fade-in {
       opacity: 0;
       transform: translateY(22px);
@@ -86,7 +96,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* счётчики (сохранил поведение) */
+    /* счётчики */
     .counterUp {
       animation: counterUp .6s ease-out both;
     }
@@ -95,7 +105,7 @@
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* сетки фикс ширины + адаптив */
+    /* контейнер и сетки */
     .container-fixed {
       width: 100%;
       max-width: min(1400px, 92vw);
@@ -109,7 +119,7 @@
     .equal-height-card { min-height: clamp(180px, 26vh, 220px); padding: clamp(14px, 2vw, 22px); }
     .equal-height-small { min-height: clamp(72px, 10vh, 96px); padding: clamp(10px, 1.4vw, 16px); }
 
-    /* навигация — стрелки по бокам (десктоп), у нижних углов (мобайл) */
+    /* стрелки */
     .nav-arrow {
       position: fixed;
       top: 50%;
@@ -154,12 +164,16 @@
     .indicator.active { background: #3b82f6; transform: scale(1.28); box-shadow: 0 0 0 4px rgba(59,130,246,.18); }
     .indicator:hover { transform: scale(1.18); }
 
-    /* адаптация: узкие экраны */
+    /* адаптация: планшеты и ниже */
+    @media (max-width: 1280px) {
+      .grid-4 { grid-template-columns: repeat(3, 1fr); }
+    }
     @media (max-width: 1024px) {
       .grid-4 { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 768px) {
-      .slide { padding: 14px; overflow-y: auto; }
+      .slide { padding: 14px; }
+      .slide.scrollable { overflow-y: auto; }
       .grid-3, .grid-4, .grid-2 { grid-template-columns: 1fr !important; }
       .equal-height-card { min-height: auto; }
       .nav-arrow {
@@ -171,6 +185,18 @@
       .arrow-right { right: max(12px, env(safe-area-inset-right)); }
       .indicators { bottom: calc(env(safe-area-inset-bottom) + 76px); gap: 8px; }
       .arrow-icon { width: 22px; height: 22px; }
+    }
+
+    /* очень низкие экраны (ландшафт телефонов, маленькая высота ноутбуков) */
+    @media (max-height: 620px) {
+      .slide { padding: 10px; }
+      .slide.scrollable { overflow-y: auto; }
+      h2 { margin-bottom: 10px !important; }
+      .equal-height-card, .equal-height-small { min-height: auto; padding: 12px; }
+      .grid-fixed { gap: 10px; }
+      .nav-arrow { width: 50px; height: 50px; }
+      .arrow-icon { width: 20px; height: 20px; }
+      .indicators { bottom: calc(env(safe-area-inset-bottom) + 66px); }
     }
 
     /* уважение к пользователю, кто отключил анимации */
@@ -199,32 +225,33 @@
     <div class="medical-pattern"></div>
 
     <div class="absolute top-6 left-6 z-10 opacity-30">
-      <img src="assets/icon.png" alt="" class="w-12 h-12" />
+      <img src="assets/icon.png" alt="" class="w-12 h-12" loading="lazy" decoding="async"/>
     </div>
     <div class="absolute bottom-6 right-6 z-10 opacity-20">
-      <img src="assets/icon.png" alt="" class="w-16 h-16" />
+      <img src="assets/icon.png" alt="" class="w-16 h-16" loading="lazy" decoding="async"/>
     </div>
 
     <div class="container-fixed h-full flex items-center justify-center relative z-10">
       <img src="assets/logo.png" alt="Boiko Clinic Logo"
            class="w-full max-w-[680px] h-auto object-contain fade-in"
-           style="animation-delay:.1s; max-height: 60vh;" />
+           style="animation-delay:.1s; max-height: 60vh;"
+           loading="eager" decoding="async"/>
     </div>
   </section>
 
   <!-- ===== Slide 2: Упаковка + слоган ===== -->
-  <section class="slide relative items-center justify-center" id="slide-2" role="group" aria-label="Слайд 2 — Упаковка">
+  <section class="slide relative items-center justify-center scrollable" id="slide-2" role="group" aria-label="Слайд 2 — Упаковка">
     <div class="medical-pattern"></div>
 
     <div class="absolute top-10 right-10 z-10 opacity-25">
-      <img src="assets/icon.png" alt="" class="w-10 h-10" />
+      <img src="assets/icon.png" alt="" class="w-10 h-10" loading="lazy" decoding="async"/>
     </div>
     <div class="absolute bottom-24 left-10 z-10 opacity-20">
-      <img src="assets/icon.png" alt="" class="w-12 h-12" />
+      <img src="assets/icon.png" alt="" class="w-12 h-12" loading="lazy" decoding="async"/>
     </div>
 
     <div class="absolute bottom-4 right-4 z-20">
-      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-95 shadow-xl rounded-lg bg-white p-2">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-95 shadow-xl rounded-lg bg-white p-2" loading="lazy" decoding="async">
     </div>
 
     <div class="container-fixed h-full flex flex-col items-center justify-center text-center relative z-10">
@@ -236,22 +263,22 @@
       <div class="relative w-full flex justify-center items-center mb-4 fade-in" style="animation-delay:.12s">
         <div class="absolute inset-0 grid place-items-center -z-10 pointer-events-none">
           <img src="assets/icon.png" alt="" class="opacity-10 object-contain"
-               style="width: clamp(320px, 52vw, 800px); transform: translateY(6px) scale(1.05);" />
+               style="width: clamp(320px, 52vw, 800px); transform: translateY(6px) scale(1.05);" loading="lazy" decoding="async"/>
         </div>
 
         <img src="assets/quercet.png" alt="Кверцет — упаковка"
              class="relative z-10 w-full h-auto object-contain drop-shadow-2xl modern-glow"
-             style="max-width: clamp(260px, 46vw, 620px);" />
+             style="max-width: clamp(260px, 46vw, 620px);" loading="lazy" decoding="async"/>
       </div>
     </div>
   </section>
 
   <!-- ===== Slide 3: Склад ===== -->
-  <section class="slide relative items-center justify-center" id="slide-3" role="group" aria-label="Слайд 3 — Склад">
+  <section class="slide relative items-center justify-center scrollable" id="slide-3" role="group" aria-label="Слайд 3 — Склад">
     <div class="medical-pattern"></div>
 
     <div class="absolute bottom-4 right-4 z-20">
-      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2" loading="lazy" decoding="async">
     </div>
 
     <div class="container-fixed h-full flex items-center justify-center relative z-10">
@@ -259,7 +286,7 @@
         <div class="text-center flex justify-center items-center fade-in" style="animation-delay:.05s">
           <img src="assets/quercet.png" alt="Кверцет — упаковка"
                class="w-full h-auto object-contain drop-shadow-2xl modern-glow"
-               style="max-width: clamp(240px, 38vw, 520px);" />
+               style="max-width: clamp(240px, 38vw, 520px);" loading="lazy" decoding="async"/>
         </div>
 
         <div class="flex flex-col justify-center">
@@ -328,10 +355,10 @@
   </section>
 
   <!-- ===== Slide 4: Механізм дії ===== -->
-  <section class="slide items-center justify-center" id="slide-4" role="group" aria-label="Слайд 4 — Механізм дії">
+  <section class="slide items-center justify-center scrollable" id="slide-4" role="group" aria-label="Слайд 4 — Механізм дії">
     <div class="medical-pattern"></div>
     <div class="absolute bottom-4 right-4 z-10">
-      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2" loading="lazy" decoding="async">
     </div>
 
     <div class="container-fixed h-full flex flex-col justify-center">
@@ -384,10 +411,10 @@
   </section>
 
   <!-- ===== Slide 5: Клінічні дослідження ===== -->
-  <section class="slide items-center justify-center" id="slide-5" role="group" aria-label="Слайд 5 — Дослідження">
+  <section class="slide items-center justify-center scrollable" id="slide-5" role="group" aria-label="Слайд 5 — Дослідження">
     <div class="medical-pattern"></div>
     <div class="absolute bottom-4 right-4 z-10">
-      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2" loading="lazy" decoding="async">
     </div>
 
     <div class="container-fixed h-full flex flex-col justify-center">
@@ -436,10 +463,10 @@
   </section>
 
   <!-- ===== Slide 6: Показання ===== -->
-  <section class="slide items-center justify-center" id="slide-6" role="group" aria-label="Слайд 6 — Показання">
+  <section class="slide items-center justify-center scrollable" id="slide-6" role="group" aria-label="Слайд 6 — Показання">
     <div class="medical-pattern"></div>
     <div class="absolute bottom-4 right-4 z-10">
-      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2" loading="lazy" decoding="async">
     </div>
 
     <div class="container-fixed h-full flex flex-col justify-center">
@@ -448,7 +475,6 @@
       </h2>
 
       <div class="grid-fixed grid-3">
-        <!-- по 6 карточек, как у вас -->
         <div class="clinical-card border border-purple-100 equal-height-card fade-in" style="animation-delay:.1s">
           <div class="text-3xl mb-2 text-center">🛡️</div>
           <h3 class="text-lg font-bold mb-2 text-purple-700 text-center">Профілактика ГРВІ</h3>
@@ -513,21 +539,21 @@
   </section>
 
   <!-- ===== Slide 7: Дозування ===== -->
-  <section class="slide relative items-center justify-center" id="slide-7" role="group" aria-label="Слайд 7 — Дозування">
+  <section class="slide relative items-center justify-center scrollable" id="slide-7" role="group" aria-label="Слайд 7 — Дозування та застосування">
     <div class="medical-pattern"></div>
     <div class="absolute bottom-4 right-4 z-10">
-      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2" loading="lazy" decoding="async">
     </div>
 
     <div class="container-fixed h-full flex flex-col justify-center">
       <h2 class="text-[clamp(20px,2.4vw,30px)] font-medium text-center mb-6 text-gray-700 fade-in" style="animation-delay:.05s">
-        Механізм дії кверцетину
+        Дозування та застосування
       </h2>
 
       <div class="grid-fixed grid-2 items-center">
         <div class="text-center fade-in" style="animation-delay:.1s">
           <img src="assets/quercet.png" alt="Кверцет — упаковка"
-               class="w-full max-w-[480px] h-auto object-contain mx-auto modern-glow" />
+               class="w-full max-w-[480px] h-auto object-contain mx-auto modern-glow" loading="lazy" decoding="async"/>
         </div>
 
         <div class="space-y-4">
@@ -571,10 +597,10 @@
   </section>
 
   <!-- ===== Slide 8: Переваги ===== -->
-  <section class="slide items-center justify-center" id="slide-8" role="group" aria-label="Слайд 8 — Переваги">
+  <section class="slide items-center justify-center scrollable" id="slide-8" role="group" aria-label="Слайд 8 — Переваги">
     <div class="medical-pattern"></div>
     <div class="absolute bottom-4 right-4 z-10">
-      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2" loading="lazy" decoding="async">
     </div>
 
     <div class="container-fixed h-full flex flex-col justify-center">
@@ -583,7 +609,6 @@
       </h2>
 
       <div class="grid-fixed grid-3">
-        <!-- 6 карточек преимуществ -->
         <div class="clinical-card border border-indigo-100 equal-height-card fade-in" style="animation-delay:.1s">
           <div class="text-3xl mb-2 text-center">🔬</div>
           <h3 class="text-lg font-bold mb-2 text-indigo-700 text-center">Науково обґрунтовано</h3>
@@ -648,10 +673,10 @@
   </section>
 
   <!-- ===== Slide 9: Підсумок ===== -->
-  <section class="slide items-center justify-center" id="slide-9" role="group" aria-label="Слайд 9 — Ефективність">
+  <section class="slide items-center justify-center scrollable" id="slide-9" role="group" aria-label="Слайд 9 — Ефективність">
     <div class="medical-pattern"></div>
     <div class="absolute bottom-4 right-4 z-10">
-      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2" loading="lazy" decoding="async">
     </div>
 
     <div class="container-fixed h-full flex flex-col justify-center">
@@ -737,6 +762,18 @@
     const slides = () => document.querySelectorAll('.slide');
     const indicators = () => document.querySelectorAll('.indicator');
 
+    /* помечаем «высокие» слайды как scrollable на небольших/низких экранах */
+    function updateScrollableFlag() {
+      const lowHeight = window.matchMedia('(max-height: 620px)').matches;
+      const isNarrow  = window.matchMedia('(max-width: 768px)').matches;
+      slides().forEach(el => {
+        if (isNarrow || lowHeight) el.classList.add('scrollable');
+        else el.classList.remove('scrollable');
+      });
+    }
+    updateScrollableFlag();
+    window.addEventListener('resize', updateScrollableFlag);
+
     function showSlide(index) {
       const s = slides();
       const dots = indicators();
@@ -778,7 +815,7 @@
       if (e.key === 'ArrowLeft') previousSlide();
     });
 
-    // счётчики (как у вас, но устойчивее)
+    // счётчики (устойчивые)
     let countersPlayed = false;
     function startCounters() {
       if (countersPlayed) return;
