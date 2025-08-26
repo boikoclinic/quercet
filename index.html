@@ -1,909 +1,812 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200, user-scalable=yes">
-    <title>Кверцет - Презентація</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #ffffff;
-            overflow: hidden;
-            color: #1f2937;
-        }
-        
-        .slide {
-            display: none;
-            width: 100vw;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            overflow: hidden;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-        }
-        
-        .slide::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 400px;
-            height: 400px;
-            background-image: 
-                radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 70% 70%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
-            opacity: 0.6;
-            border-radius: 50%;
-            transform: translate(150px, -150px);
-        }
-        
-        .slide::after {
-            content: '+';
-            position: absolute;
-            bottom: 5%;
-            left: 5%;
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(16, 185, 129, 0.06) 100%);
-            border: 2px solid rgba(59, 130, 246, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            color: rgba(59, 130, 246, 0.2);
-            font-weight: bold;
-        }
-        
-        .medical-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><g fill="%23e2e8f0" opacity="0.3"><circle cx="20" cy="20" r="1.5"/></g></svg>');
-            background-repeat: repeat;
-            opacity: 0.1;
-            z-index: 1;
-        }
-        
-        .slide.active {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .clinical-card {
-            transition: all 0.3s ease;
-            border-radius: 12px;
-        }
-        
-        .clinical-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-        
-        .modern-glow {
-            animation: modernPulse 3s ease-in-out infinite;
-        }
-        
-        @keyframes modernPulse {
-            0%, 100% { 
-                transform: scale(1);
-                filter: brightness(1);
-            }
-            50% { 
-                transform: scale(1.02);
-                filter: brightness(1.1);
-            }
-        }
-        
-        .indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #9ca3af;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .indicator.active {
-            background: #3b82f6;
-            transform: scale(1.3);
-        }
-        
-        .indicator:hover {
-            transform: scale(1.2);
-        }
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=yes"
+  />
+  <title>Кверцет — Презентація</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-        .nav-arrow {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 2px solid #e2e8f0;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
-        }
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-        .nav-arrow:hover {
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border-color: #cbd5e1;
-        }
+    :root {
+      /* высота окна для iOS/Android */
+      --app-height: 100dvh;
+    }
 
-        .nav-arrow:active {
-            transform: translateY(-50%) scale(0.95);
-        }
+    /* базовая типографика */
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      color: #1f2937;
+      overflow: hidden;             /* перелистываем, не скроллим весь документ */
+      overscroll-behavior: none;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        .arrow-left {
-            left: 30px;
-        }
+    /* СЛАЙДЫ */
+    .slide {
+      display: none;
+      width: 100vw;
+      height: var(--app-height);    /* стабильная высота на мобильных */
+      position: fixed;
+      inset: 0;
+      padding: clamp(12px, 2.2vw, 24px);
+      box-sizing: border-box;
+      overflow: hidden;
+      background: #ffffff !important; /* единая белая тема */
+    }
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-        .arrow-right {
-            right: 30px;
-        }
+    /* лёгкий фон-паттерн (не мешает кликам) */
+    .medical-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><g fill="%23e5e7eb" opacity="0.35"><circle cx="18" cy="18" r="1.2"/></g></svg>');
+      background-repeat: repeat;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-        .arrow-icon {
-            width: 24px;
-            height: 24px;
-            color: #475569;
-            transition: color 0.3s ease;
-        }
+    /* карточки */
+    .clinical-card {
+      transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease, filter .3s ease;
+      border-radius: 14px;
+      background: #fff;
+    }
+    .clinical-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 42px rgba(0,0,0,.10);
+    }
 
-        .nav-arrow:hover .arrow-icon {
-            color: #1e293b;
-        }
+    /* старая «modern glow» — вернул */
+    .modern-glow { animation: modernPulse 3s ease-in-out infinite; }
+    @keyframes modernPulse {
+      0%,100% { transform: scale(1); filter: brightness(1); }
+      50%     { transform: scale(1.02); filter: brightness(1.06); }
+    }
 
-        .mobile-scroll {
-            overflow-y: auto;
-        }
-        
-        .equal-height-card {
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 1.5rem;
-        }
+    /* плавное появление при переключении — как раньше */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(22px);
+      animation: fadeIn .6s cubic-bezier(.25,.46,.45,.94) forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .equal-height-small {
-            min-height: 80px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 1rem;
-        }
+    /* счётчики (сохранил поведение) */
+    .counterUp {
+      animation: counterUp .6s ease-out both;
+    }
+    @keyframes counterUp {
+      0% { opacity: .3; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
 
-        /* Фиксированные размеры для всех устройств */
-        .container-fixed {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
+    /* сетки фикс ширины + адаптив */
+    .container-fixed {
+      width: 100%;
+      max-width: min(1400px, 92vw);
+      margin-inline: auto;
+    }
+    .grid-fixed { display: grid; gap: clamp(12px, 1.6vw, 24px); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
 
-        .grid-fixed {
-            display: grid;
-            gap: 1.5rem;
-        }
+    .equal-height-card { min-height: clamp(180px, 26vh, 220px); padding: clamp(14px, 2vw, 22px); }
+    .equal-height-small { min-height: clamp(72px, 10vh, 96px); padding: clamp(10px, 1.4vw, 16px); }
 
-        .grid-4 {
-            grid-template-columns: repeat(4, 1fr);
-        }
+    /* навигация — стрелки по бокам (десктоп), у нижних углов (мобайл) */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 60px; height: 60px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg,#ffffff 0%,#f8fafc 100%);
+      border: 2px solid #e2e8f0;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+      cursor: pointer;
+      z-index: 50;
+      transition: transform .28s cubic-bezier(.4,0,.2,1), box-shadow .28s cubic-bezier(.4,0,.2,1), border-color .28s ease;
+      backdrop-filter: blur(10px);
+    }
+    .nav-arrow:hover {
+      transform: translateY(-50%) scale(1.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,.15);
+      border-color: #cbd5e1;
+    }
+    .nav-arrow:active { transform: translateY(-50%) scale(.96); }
+    .arrow-left  { left: max(18px, env(safe-area-inset-left)); }
+    .arrow-right { right: max(18px, env(safe-area-inset-right)); }
+    .arrow-icon { width: 24px; height: 24px; color: #475569; }
 
-        .grid-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
+    /* индикаторы */
+    .indicators {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(env(safe-area-inset-bottom) + 24px);
+      display: flex; gap: 10px;
+      z-index: 40;
+    }
+    .indicator {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #9ca3af;
+      cursor: pointer;
+      transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+    .indicator.active { background: #3b82f6; transform: scale(1.28); box-shadow: 0 0 0 4px rgba(59,130,246,.18); }
+    .indicator:hover { transform: scale(1.18); }
 
-        .grid-2 {
-            grid-template-columns: repeat(2, 1fr);
-        }
+    /* адаптация: узкие экраны */
+    @media (max-width: 1024px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .slide { padding: 14px; overflow-y: auto; }
+      .grid-3, .grid-4, .grid-2 { grid-template-columns: 1fr !important; }
+      .equal-height-card { min-height: auto; }
+      .nav-arrow {
+        top: auto; bottom: max(14px, calc(env(safe-area-inset-bottom) + 14px));
+        transform: none; width: 52px; height: 52px;
+      }
+      .nav-arrow:active { transform: scale(.96); }
+      .arrow-left  { left: max(12px, env(safe-area-inset-left)); }
+      .arrow-right { right: max(12px, env(safe-area-inset-right)); }
+      .indicators { bottom: calc(env(safe-area-inset-bottom) + 76px); gap: 8px; }
+      .arrow-icon { width: 22px; height: 22px; }
+    }
 
-
-
-        @keyframes counterUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-/* === Белая тема для всех слайдов === */
-
-/* 1) База: у всех .slide фон только белый */
-.slide {
-  background: #ffffff !important;
-}
-
-/* 2) Отключаем декоративные псевдо-элементы (были полупрозрачные круги/плюс) */
-.slide::before,
-.slide::after {
-  content: none !important;
-}
-
-/* 3) Если на слайде добавлены tailwind-классы bg-*, принудительно белим */
-#slide-5,
-#slide-8,
-#slide-9 {
-  background-color: #ffffff !important; /* были bg-green-50 / bg-indigo-50 / bg-gray-50 */
-}
-
-/* 4) Сохраняем «еле видимый» паттерн, но делаем его ещё деликатнее (по желанию) */
-.medical-pattern {
-  opacity: 0.05;           /* было 0.1 — теперь легче */
-  pointer-events: none;     /* чтобы не мешал кликам */
-  z-index: 0;
-}
-        
-    </style>
-    
+    /* уважение к пользователю, кто отключил анимации */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
 </head>
+
 <body>
-    <!-- Стрелки навигации -->
-    <div class="nav-arrow arrow-left" onclick="previousSlide()">
-        <svg class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
-    </div>
-    
-    <div class="nav-arrow arrow-right" onclick="nextSlide()">
-        <svg class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-    </div>
+  <!-- Стрелки навигации -->
+  <button class="nav-arrow arrow-left" onclick="previousSlide()" aria-label="Попередній слайд">
+    <svg class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+    </svg>
+  </button>
 
-    <!-- Slide 1: Logo -->
-    <div class="slide active items-center justify-center" id="slide-1">
-        <!-- Медична іконка зліва зверху -->
-        <div class="absolute top-8 left-8 z-10">
-            <img src="assets/icon.png" alt="Medical Icon" class="w-16 h-16 opacity-30">
-        </div>
-        <!-- Медична іконка справа знизу -->
-        <div class="absolute bottom-8 right-8 z-10">
-            <img src="assets/icon.png" alt="Medical Icon" class="w-20 h-20 opacity-20">
-        </div>
-        <div class="container-fixed h-full flex items-center justify-center relative z-20">
-            <img src="assets/logo.png" alt="Boiko Clinic Logo" class="w-full max-w-2xl h-auto" style="max-height: 60vh; object-fit: contain;">
-        </div>
+  <button class="nav-arrow arrow-right" onclick="nextSlide()" aria-label="Наступний слайд">
+    <svg class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    </svg>
+  </button>
+
+  <!-- ===== Slide 1: Лого ===== -->
+  <section class="slide active items-center justify-center" id="slide-1" role="group" aria-label="Слайд 1 — Логотип">
+    <div class="medical-pattern"></div>
+
+    <div class="absolute top-6 left-6 z-10 opacity-30">
+      <img src="assets/icon.png" alt="" class="w-12 h-12" />
+    </div>
+    <div class="absolute bottom-6 right-6 z-10 opacity-20">
+      <img src="assets/icon.png" alt="" class="w-16 h-16" />
     </div>
 
-<!-- Slide 2: Упаковка + слоган -->
-<div class="slide relative overflow-hidden items-center justify-center" id="slide-2">
-  <!-- Еле-видимый паттерн по всему слайду -->
-  <div class="medical-pattern"></div>
+    <div class="container-fixed h-full flex items-center justify-center relative z-10">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo"
+           class="w-full max-w-[680px] h-auto object-contain fade-in"
+           style="animation-delay:.1s; max-height: 60vh;" />
+    </div>
+  </section>
 
-  <!-- Декор (можно удалить, если лишний) -->
-  <div class="absolute top-16 right-16 z-10">
-    <img src="assets/icon.png" alt="Medical Icon" class="w-12 h-12 opacity-25">
-  </div>
-  <div class="absolute bottom-32 left-16 z-10">
-    <img src="assets/icon.png" alt="Medical Icon" class="w-14 h-14 opacity-20">
-  </div>
+  <!-- ===== Slide 2: Упаковка + слоган ===== -->
+  <section class="slide relative items-center justify-center" id="slide-2" role="group" aria-label="Слайд 2 — Упаковка">
+    <div class="medical-pattern"></div>
 
-  <!-- Логотип -->
-  <div class="absolute bottom-4 right-4 z-30">
-    <img src="assets/logo.png" alt="Boiko Clinic Logo"
-         class="h-16 w-auto opacity-95 shadow-xl rounded-lg bg-white p-2">
-  </div>
+    <div class="absolute top-10 right-10 z-10 opacity-25">
+      <img src="assets/icon.png" alt="" class="w-10 h-10" />
+    </div>
+    <div class="absolute bottom-24 left-10 z-10 opacity-20">
+      <img src="assets/icon.png" alt="" class="w-12 h-12" />
+    </div>
 
-  <!-- Контент -->
-  <div class="container-fixed h-full flex flex-col justify-center text-center relative z-20">
-    <h2 class="text-3xl font-medium text-gray-700 mb-6">Кверцет- ефективна доза кверцетину</h2>
+    <div class="absolute bottom-4 right-4 z-20">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-95 shadow-xl rounded-lg bg-white p-2">
+    </div>
 
-    <!-- HERO: упаковка + фон-щит, центрируются вместе -->
-    <div class="hero-wrap relative w-full flex justify-center items-center mb-6">
-      <!-- Щит, привязанный к упаковке -->
-      <div class="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
-        <img
-          src="assets/icon.png"
-          alt="Medical Shield"
-          class="w-[52vw] max-w-[800px] min-w-[420px] opacity-10 object-contain translate-y-[6px] scale-105"
-        >
+    <div class="container-fixed h-full flex flex-col items-center justify-center text-center relative z-10">
+      <h2 class="text-[clamp(20px,2.4vw,30px)] font-medium text-gray-700 mb-6 fade-in" style="animation-delay:.05s">
+        Кверцет — ефективна доза кверцетину
+      </h2>
+
+      <!-- Щит + упаковка -->
+      <div class="relative w-full flex justify-center items-center mb-4 fade-in" style="animation-delay:.12s">
+        <div class="absolute inset-0 grid place-items-center -z-10 pointer-events-none">
+          <img src="assets/icon.png" alt="" class="opacity-10 object-contain"
+               style="width: clamp(320px, 52vw, 800px); transform: translateY(6px) scale(1.05);" />
+        </div>
+
+        <img src="assets/quercet.png" alt="Кверцет — упаковка"
+             class="relative z-10 w-full h-auto object-contain drop-shadow-2xl modern-glow"
+             style="max-width: clamp(260px, 46vw, 620px);" />
       </div>
+    </div>
+  </section>
 
-      <!-- Упаковка поверх щита -->
-      <img
-        src="assets/quercet.png"
-        alt="Кверцет упаковка"
-        class="relative z-10 w-full max-w-lg h-auto object-contain drop-shadow-2xl modern-glow"
-      >
+  <!-- ===== Slide 3: Склад ===== -->
+  <section class="slide relative items-center justify-center" id="slide-3" role="group" aria-label="Слайд 3 — Склад">
+    <div class="medical-pattern"></div>
+
+    <div class="absolute bottom-4 right-4 z-20">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
     </div>
 
-
-  </div>
-</div>
-
-
-
-
-    <!-- Slide 3: Склад препарату -->
-<div class="slide relative overflow-hidden items-center justify-center" id="slide-3">
-  <!-- Еле-видимий фон -->
-  <div class="medical-pattern"></div>
-  <!-- Великий медичний щит на фоні -->
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none">
-    <img src="assets/icon.png" alt="Medical Shield" class="w-96 h-96 opacity-5 object-contain">
-  </div>
-
-  <!-- Логотип -->
-  <div class="absolute bottom-4 right-4 z-30">
-    <img src="assets/logo.png" alt="Boiko Clinic Logo"
-         class="h-16 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
-  </div>
-
-  <!-- Контент -->
-  <div class="container-fixed h-full flex items-center justify-center relative z-20">
-    <div class="grid-fixed grid-2 items-center w-full">
-      <!-- Ліва колонка: упаковка -->
-      <div class="text-center flex justify-center items-center">
-        <div class="modern-glow">
-          <img src="assets/quercet.png" alt="Кверцет упаковка"
-               class="w-full max-w-md h-auto object-contain drop-shadow-2xl">
+    <div class="container-fixed h-full flex items-center justify-center relative z-10">
+      <div class="grid-fixed grid-2 items-center w-full">
+        <div class="text-center flex justify-center items-center fade-in" style="animation-delay:.05s">
+          <img src="assets/quercet.png" alt="Кверцет — упаковка"
+               class="w-full h-auto object-contain drop-shadow-2xl modern-glow"
+               style="max-width: clamp(240px, 38vw, 520px);" />
         </div>
-      </div>
 
-      <!-- Права колонка: склад + дозування -->
-      <div class="flex flex-col justify-center">
-        <h2 class="text-3xl font-medium text-center mb-6 text-gray-700">Склад препарату</h2>
+        <div class="flex flex-col justify-center">
+          <h2 class="text-[clamp(20px,2.4vw,30px)] font-medium text-center mb-6 text-gray-700 fade-in" style="animation-delay:.1s">
+            Склад препарату
+          </h2>
 
-        <div class="grid-fixed grid-2">
-          <!-- Кверцетин -->
-          <div class="clinical-card bg-blue-50 rounded-2xl border border-blue-200 equal-height-small p-4">
-            <h3 class="text-lg font-bold text-blue-700 mb-2">Кверцетин</h3>
-            <p class="text-2xl font-bold text-blue-600 mb-1">480&nbsp;мг</p>
-            <p class="text-xs text-gray-600">Основний активний компонент</p>
-          </div>
-
-          <!-- Пектин -->
-          <div class="clinical-card bg-green-50 rounded-2xl border border-green-200 equal-height-small p-4">
-            <h3 class="text-lg font-bold text-green-700 mb-2">Пектин</h3>
-            <p class="text-2xl font-bold text-green-600 mb-1">20&nbsp;мг</p>
-            <p class="text-xs text-gray-600">Для кращого засвоєння</p>
-          </div>
-
-          <!-- Рекомендоване дозування (оновлено) -->
-          <div class="clinical-card bg-white rounded-2xl border border-slate-200 col-span-2 p-6 text-center shadow-md">
-            <div class="flex items-center justify-center gap-3 mb-4">
-              <div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center">💊</div>
-              <h3 class="text-lg font-semibold text-gray-900">Рекомендоване дозування</h3>
+          <div class="grid-fixed grid-2">
+            <div class="clinical-card border border-blue-200 bg-blue-50 rounded-2xl equal-height-small fade-in" style="animation-delay:.15s">
+              <h3 class="text-lg font-bold text-blue-700 mb-1">Кверцетин</h3>
+              <p class="text-2xl font-bold text-blue-600">480&nbsp;мг</p>
+              <p class="text-xs text-gray-600">Основний активний компонент</p>
             </div>
 
-            <!-- 3 зрозумілі блоки -->
-            <div class="grid-fixed grid-3">
-              <!-- Добова доза -->
-              <div class="rounded-xl border border-gray-200 bg-white p-4 equal-height-small">
-                <div class="text-xs uppercase text-gray-500 mb-1">Добова доза</div>
-                <div class="text-2xl font-bold text-gray-900">2 капс/добу</div>
-                <div class="text-xs text-gray-600">приймати під час їжі</div>
+            <div class="clinical-card border border-green-200 bg-green-50 rounded-2xl equal-height-small fade-in" style="animation-delay:.2s">
+              <h3 class="text-lg font-bold text-green-700 mb-1">Пектин</h3>
+              <p class="text-2xl font-bold text-green-600">20&nbsp;мг</p>
+              <p class="text-xs text-gray-600">Для кращого засвоєння</p>
+            </div>
+
+            <div class="clinical-card border border-slate-200 bg-white rounded-2xl col-span-2 p-6 text-center shadow-md fade-in" style="animation-delay:.25s">
+              <div class="flex items-center justify-center gap-3 mb-4">
+                <div class="w-9 h-9 rounded-lg bg-indigo-600 text-white grid place-items-center">💊</div>
+                <h3 class="text-lg font-semibold text-gray-900">Рекомендоване дозування</h3>
               </div>
 
-              <!-- Схема прийому -->
-              <div class="rounded-xl border border-blue-200 bg-white p-4 equal-height-small">
-                <div class="text-xs uppercase text-blue-700 mb-2">Схема прийому</div>
-                <div class="grid-fixed grid-2 text-center">
-                  <div class="bg-white rounded-lg border border-blue-100 p-2">
-                    <div class="text-sm font-semibold text-blue-700">Ранок</div>
-                    <div class="text-xs text-gray-600">1 капсула під час сніданку</div>
-                  </div>
-                  <div class="bg-white rounded-lg border border-blue-100 p-2">
-                    <div class="text-sm font-semibold text-blue-700">Вечір</div>
-                    <div class="text-xs text-gray-600">1 капсула під час вечері</div>
+              <div class="grid-fixed grid-3">
+                <div class="rounded-xl border border-gray-200 bg-white p-4 equal-height-small">
+                  <div class="text-xs uppercase text-gray-500 mb-1">Добова доза</div>
+                  <div class="text-2xl font-bold text-gray-900">2 капсули/добу</div>
+                  <div class="text-xs text-gray-600">приймати під час їжі</div>
+                </div>
+
+                <div class="rounded-xl border border-blue-200 bg-white p-4 equal-height-small">
+                  <div class="text-xs uppercase text-blue-700 mb-2">Схема прийому</div>
+                  <div class="grid-fixed grid-2 text-center">
+                    <div class="bg-blue-50 rounded-lg border border-blue-100 p-2">
+                      <div class="text-sm font-semibold text-blue-700">Ранок</div>
+                      <div class="text-xs text-gray-600">1 капсула під час сніданку</div>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg border border-blue-100 p-2">
+                      <div class="text-sm font-semibold text-blue-700">Вечір</div>
+                      <div class="text-xs text-gray-600">1 капсула під час вечері</div>
+                    </div>
                   </div>
                 </div>
+
+                <div class="rounded-xl border border-emerald-200 bg-white p-4 equal-height-small">
+                  <div class="text-xs uppercase text-emerald-700 mb-1">Курс</div>
+                  <div class="text-xl font-bold text-emerald-700">60–90 днів</div>
+                  <div class="text-xs text-gray-600">тривалість визначає лікар</div>
+                </div>
               </div>
 
-              <!-- Курс -->
-              <div class="rounded-xl border border-emerald-200 bg-white p-4 equal-height-small">
-                <div class="text-xs uppercase text-emerald-700 mb-1">Курс</div>
-                <div class="text-xl font-bold text-emerald-700">60–90 днів</div>
-                <div class="text-xs text-gray-600">тривалість визначає лікар</div>
-              </div>
-            </div>
-
-            <!-- Підсумок по діючих речовинах -->
-            <div class="mt-4 rounded-xl border border-gray-200 bg-white p-3">
-              <div class="text-xs text-gray-500">Разом на добу:</div>
-              <div class="text-sm font-medium text-gray-800">
-                960&nbsp;мг кверцетину + 40&nbsp;мг пектину
+              <div class="mt-4 rounded-xl border border-gray-200 bg-white p-3">
+                <div class="text-xs text-gray-500">Разом на добу:</div>
+                <div class="text-sm font-medium text-gray-800">
+                  960&nbsp;мг кверцетину + 40&nbsp;мг пектину
+                </div>
               </div>
             </div>
           </div>
-          <!-- /Рекомендоване дозування -->
+        </div>
+      </div>    
+    </div>
+  </section>
+
+  <!-- ===== Slide 4: Механізм дії ===== -->
+  <section class="slide items-center justify-center" id="slide-4" role="group" aria-label="Слайд 4 — Механізм дії">
+    <div class="medical-pattern"></div>
+    <div class="absolute bottom-4 right-4 z-10">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+    </div>
+
+    <div class="container-fixed h-full flex flex-col justify-center">
+      <h2 class="text-[clamp(20px,2.4vw,30px)] font-medium text-center mb-6 text-gray-700 fade-in" style="animation-delay:.05s">
+        Механізм дії кверцетину
+      </h2>
+
+      <div class="grid-fixed grid-4">
+        <div class="clinical-card border border-blue-100 text-center equal-height-card fade-in" style="animation-delay:.1s">
+          <div class="text-3xl mb-2">🦠</div>
+          <h3 class="text-lg font-bold mb-2 text-blue-700">Противірусна дія</h3>
+          <ul class="text-sm text-gray-600 space-y-1 text-left mx-auto max-w-xs">
+            <li>• Блокує проникнення вірусів</li>
+            <li>• Пригнічує реплікацію</li>
+            <li>• Зменшує вірусне навантаження</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-green-100 text-center equal-height-card fade-in" style="animation-delay:.15s">
+          <div class="text-3xl mb-2">💪</div>
+          <h3 class="text-lg font-bold mb-2 text-green-700">Імуномодулююча дія</h3>
+          <ul class="text-sm text-gray-600 space-y-1 text-left mx-auto max-w-xs">
+            <li>• Активує NK-клітини</li>
+            <li>• Стимулює інтерферони</li>
+            <li>• Покращує імунну відповідь</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-red-100 text-center equal-height-card fade-in" style="animation-delay:.2s">
+          <div class="text-3xl mb-2">❤️</div>
+          <h3 class="text-lg font-bold mb-2 text-red-700">Кардіопротективна дія</h3>
+          <ul class="text-sm text-gray-600 space-y-1 text-left mx-auto max-w-xs">
+            <li>• Знижує артеріальний тиск</li>
+            <li>• Покращує функцію судин</li>
+            <li>• Зменшує запалення</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-yellow-100 text-center equal-height-card fade-in" style="animation-delay:.25s">
+          <div class="text-3xl mb-2">⚡</div>
+          <h3 class="text-lg font-bold mb-2 text-yellow-700">Антиоксидантна дія</h3>
+          <ul class="text-sm text-gray-600 space-y-1 text-left mx-auto max-w-xs">
+            <li>• Нейтралізує вільні радикали</li>
+            <li>• Захищає клітини</li>
+            <li>• Сповільнює старіння</li>
+          </ul>
         </div>
       </div>
     </div>
-  </div>
-</div>
+  </section>
 
-
-    <!-- Slide 4: Механізм дії -->
-    <div class="slide items-center justify-center" id="slide-4">
-        <div class="medical-pattern"></div>
-        <div class="absolute bottom-4 right-4 z-10">
-            <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-16 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
-        </div>
-        <div class="container-fixed h-full flex flex-col justify-center">
-            <h2 class="text-3xl font-medium text-center mb-8 text-gray-700">Механізм дії кверцетину</h2>
-            
-            <div class="grid-fixed grid-4">
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-blue-100 text-center equal-height-card">
-                    <div class="text-3xl mb-3">🦠</div>
-                    <h3 class="text-lg font-bold mb-3 text-blue-700">Противірусна дія</h3>
-                    <ul class="text-sm text-gray-600 space-y-1 text-left">
-                        <li>• Блокує проникнення вірусів</li>
-                        <li>• Пригнічує реплікацію</li>
-                        <li>• Зменшує вірусне навантаження</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-green-100 text-center equal-height-card">
-                    <div class="text-3xl mb-3">💪</div>
-                    <h3 class="text-lg font-bold mb-3 text-green-700">Імуномодулююча дія</h3>
-                    <ul class="text-sm text-gray-600 space-y-1 text-left">
-                        <li>• Активує NK-клітини</li>
-                        <li>• Стимулює інтерферони</li>
-                        <li>• Покращує імунну відповідь</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-red-100 text-center equal-height-card">
-                    <div class="text-3xl mb-3">❤️</div>
-                    <h3 class="text-lg font-bold mb-3 text-red-700">Кардіопротективна дія</h3>
-                    <ul class="text-sm text-gray-600 space-y-1 text-left">
-                        <li>• Знижує артеріальний тиск</li>
-                        <li>• Покращує функцію судин</li>
-                        <li>• Зменшує запалення</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-yellow-100 text-center equal-height-card">
-                    <div class="text-3xl mb-3">⚡</div>
-                    <h3 class="text-lg font-bold mb-3 text-yellow-700">Антиоксидантна дія</h3>
-                    <ul class="text-sm text-gray-600 space-y-1 text-left">
-                        <li>• Нейтралізує вільні радикали</li>
-                        <li>• Захищає клітини</li>
-                        <li>• Сповільнює старіння</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+  <!-- ===== Slide 5: Клінічні дослідження ===== -->
+  <section class="slide items-center justify-center" id="slide-5" role="group" aria-label="Слайд 5 — Дослідження">
+    <div class="medical-pattern"></div>
+    <div class="absolute bottom-4 right-4 z-10">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
     </div>
 
-    <!-- Slide 5: Клінічні дослідження -->
-    <div class="slide bg-green-50 items-center justify-center" id="slide-5">
-        <div class="absolute bottom-4 right-4 z-10">
-            <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-16 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+    <div class="container-fixed h-full flex flex-col justify-center">
+      <h2 class="text-[clamp(20px,2.4vw,30px)] font-medium text-center mb-6 text-gray-700 fade-in" style="animation-delay:.05s">
+        Клінічні дослідження
+      </h2>
+
+      <div class="grid-fixed grid-3 mb-5">
+        <div class="clinical-card border border-green-100 text-center equal-height-card fade-in" style="animation-delay:.1s">
+          <h3 class="text-lg font-bold mb-2 text-green-700">Противірусна активність</h3>
+          <div class="text-3xl font-bold text-green-600 mb-1 counterUp">94%</div>
+          <p class="text-sm text-gray-600 mb-2">ефективність проти респіраторних вірусів</p>
+          <div class="text-xs text-gray-500">Meta-аналіз 12 досліджень, n=2847</div>
         </div>
-         <div class="container-fixed h-full flex flex-col justify-center">
-            <h2 class="text-3xl font-medium text-center mb-8 text-gray-700">Клінічні дослідження </h2>
-            
-            <div class="grid-fixed grid-3 mb-6">
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-green-100 equal-height-card text-center">
-                    <h3 class="text-lg font-bold mb-3 text-green-700">Противірусна активність</h3>
-                    <div class="text-3xl font-bold text-green-600 mb-2">94%</div>
-                    <p class="text-sm text-gray-600 mb-3">ефективність проти респіраторних вірусів</p>
-                    <div class="text-xs text-gray-500">Meta-аналіз 12 досліджень, n=2847</div>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-blue-100 equal-height-card text-center">
-                    <h3 class="text-lg font-bold mb-3 text-blue-700">Імуномодуляція</h3>
-                    <div class="text-3xl font-bold text-blue-600 mb-2">88%</div>
-                    <p class="text-sm text-gray-600 mb-3">підвищення активності імунної системи</p>
-                    <div class="text-xs text-gray-500">Подвійне сліпе дослідження, n=456</div>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-red-100 equal-height-card text-center">
-                    <h3 class="text-lg font-bold mb-3 text-red-700">Кардіопротекція</h3>
-                    <div class="text-3xl font-bold text-red-600 mb-2">92%</div>
-                    <p class="text-sm text-gray-600 mb-3">покращення серцево-судинних показників</p>
-                    <div class="text-xs text-gray-500">Мультицентрове дослідження, n=1234</div>
-                </div>
-            </div>
-            
-            <div class="grid-fixed grid-3">
-                <div class="bg-white rounded-xl shadow-md border border-gray-100 text-center equal-height-small">
-                    <div class="text-xl font-bold text-gray-700">8750</div>
-                    <div class="text-xs text-gray-500">пацієнтів в дослідженнях</div>
-                </div>
-                <div class="bg-white rounded-xl shadow-md border border-gray-100 text-center equal-height-small">
-                    <div class="text-xl font-bold text-gray-700">96.2%</div>
-                    <div class="text-xs text-gray-500">задоволеність лікуванням</div>
-                </div>
-                <div class="bg-white rounded-xl shadow-md border border-gray-100 text-center equal-height-small">
-                    <div class="text-xl font-bold text-gray-700">15</div>
-                    <div class="text-xs text-gray-500">країн проводили дослідження</div>
-                </div>
-            </div>
+
+        <div class="clinical-card border border-blue-100 text-center equal-height-card fade-in" style="animation-delay:.15s">
+          <h3 class="text-lg font-bold mb-2 text-blue-700">Імуномодуляція</h3>
+          <div class="text-3xl font-bold text-blue-600 mb-1 counterUp">88%</div>
+          <p class="text-sm text-gray-600 mb-2">підвищення активності імунної системи</p>
+          <div class="text-xs text-gray-500">Подвійне сліпе дослідження, n=456</div>
         </div>
-    </div>
 
-    <!-- Slide 6: Показання до застосування -->
-    <div class="slide items-center justify-center" id="slide-6">
-        <div class="medical-pattern"></div>
-        <div class="absolute bottom-4 right-4 z-10">
-            <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-16 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+        <div class="clinical-card border border-red-100 text-center equal-height-card fade-in" style="animation-delay:.2s">
+          <h3 class="text-lg font-bold mb-2 text-red-700">Кардіопротекція</h3>
+          <div class="text-3xl font-bold text-red-600 mb-1 counterUp">92%</div>
+          <p class="text-sm text-gray-600 mb-2">покращення серцево-судинних показників</p>
+          <div class="text-xs text-gray-500">Мультицентрове дослідження, n=1234</div>
         </div>
-        <div class="container-fixed h-full flex flex-col justify-center">
-            <h2 class="text-3xl font-medium text-center mb-8 text-gray-700">Показання до застосування</h2>
-            
-            <div class="grid-fixed grid-3">
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-purple-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">🛡️</div>
-                    <h3 class="text-lg font-bold mb-3 text-purple-700 text-center">Профілактика ГРВІ</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Зниження ризику захворювання</li>
-                        <li>• Скорочення тривалості хвороби</li>
-                        <li>• Полегшення симптомів</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-blue-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">💊</div>
-                    <h3 class="text-lg font-bold mb-3 text-blue-700 text-center">Імунодефіцити</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Часті інфекційні захворювання</li>
-                        <li>• Тривалі періоди відновлення</li>
-                        <li>• Хронічна втома</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-red-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">❤️</div>
-                    <h3 class="text-lg font-bold mb-3 text-red-700 text-center">Серцево-судинні проблеми</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Гіпертонія</li>
-                        <li>• Атеросклероз</li>
-                        <li>• Запальні процеси</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-green-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">🌿</div>
-                    <h3 class="text-lg font-bold mb-3 text-green-700 text-center">Алергічні реакції</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Сезонна алергія</li>
-                        <li>• Астма</li>
-                        <li>• Екзема та дерматити</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-yellow-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">⚡</div>
-                    <h3 class="text-lg font-bold mb-3 text-yellow-700 text-center">Оксидативний стрес</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Хронічні захворювання</li>
-                        <li>• Інтенсивні навантаження</li>
-                        <li>• Вікові зміни</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-indigo-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">🧠</div>
-                    <h3 class="text-lg font-bold mb-3 text-indigo-700 text-center">Нейропротекція</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Когнітивні порушення</li>
-                        <li>• Нейродегенеративні зміни</li>
-                        <li>• Стрес та перевтома</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
- <!-- Slide 7: Дозування та застосування -->
-<div class="slide bg-white relative overflow-hidden items-center justify-center" id="slide-7">
-  <!-- ▼ ФОН (как в Slide 3) -->
-  <div class="medical-pattern"></div>
-  <!-- Большой щит по центру, слабая видимость -->
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none">
-    <img src="assets/icon.png" alt="Medical Shield" class="w-96 h-96 opacity-5 object-contain">
-  </div>
-  <!-- ▲ КОНЕЦ ФОНА -->
-
-  <div class="absolute bottom-4 right-4 z-10">
-    <img src="assets/logo.png" alt="Boiko Clinic Logo"
-         class="h-16 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
-  </div>
-
-  <div class="container-fixed h-full flex flex-col justify-center">
-            <h2 class="text-3xl font-medium text-center mb-8 text-gray-700">Механізм дії кверцетину</h2>
-
-    <div class="grid-fixed grid-2 items-center">
-      <div class="text-center">
-        <img src="assets/quercet.png" alt="Кверцет упаковка"
-             class="w-full max-w-sm h-auto object-contain mx-auto modern-glow">
       </div>
 
-      <div class="space-y-4">
-        <div class="clinical-card bg-white rounded-2xl shadow-lg border border-orange-200 p-6">
-          <h3 class="text-lg font-bold text-orange-700 mb-3">📊 Стандартне дозування</h3>
-          <div class="text-3xl font-bold text-orange-600 mb-2">2 капсули</div>
-          <p class="text-sm text-gray-600 mb-1">на добу під час їжі</p>
-          <p class="text-xs text-gray-500">Разом 960 мг кверцетину + 40 мг пектину</p>
+      <div class="grid-fixed grid-3">
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 text-center equal-height-small fade-in" style="animation-delay:.25s">
+          <div class="text-xl font-bold text-gray-700">8750</div>
+          <div class="text-xs text-gray-500">пацієнтів в дослідженнях</div>
+        </div>
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 text-center equal-height-small fade-in" style="animation-delay:.3s">
+          <div class="text-xl font-bold text-gray-700">96.2%</div>
+          <div class="text-xs text-gray-500">задоволеність лікуванням</div>
+        </div>
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 text-center equal-height-small fade-in" style="animation-delay:.35s">
+          <div class="text-xl font-bold text-gray-700">15</div>
+          <div class="text-xs text-gray-500">країн проводили дослідження</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Slide 6: Показання ===== -->
+  <section class="slide items-center justify-center" id="slide-6" role="group" aria-label="Слайд 6 — Показання">
+    <div class="medical-pattern"></div>
+    <div class="absolute bottom-4 right-4 z-10">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+    </div>
+
+    <div class="container-fixed h-full flex flex-col justify-center">
+      <h2 class="text-[clamp(20px,2.4vw,30px)] font-medium text-center mb-6 text-gray-700 fade-in" style="animation-delay:.05s">
+        Показання до застосування
+      </h2>
+
+      <div class="grid-fixed grid-3">
+        <!-- по 6 карточек, как у вас -->
+        <div class="clinical-card border border-purple-100 equal-height-card fade-in" style="animation-delay:.1s">
+          <div class="text-3xl mb-2 text-center">🛡️</div>
+          <h3 class="text-lg font-bold mb-2 text-purple-700 text-center">Профілактика ГРВІ</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Зниження ризику захворювання</li>
+            <li>• Скорочення тривалості хвороби</li>
+            <li>• Полегшення симптомів</li>
+          </ul>
         </div>
 
-        <div class="clinical-card bg-white rounded-2xl shadow-lg border border-blue-200 p-6">
-          <h3 class="text-lg font-bold text-blue-700 mb-3">⏰ Схема прийому</h3>
-          <div class="grid-fixed grid-2 text-center">
-            <div class="bg-blue-50 rounded-xl p-3">
-              <div class="text-lg font-bold text-blue-600">Ранок</div>
-              <div class="text-xs text-gray-600">1 капсула під час сніданку</div>
+        <div class="clinical-card border border-blue-100 equal-height-card fade-in" style="animation-delay:.15s">
+          <div class="text-3xl mb-2 text-center">💊</div>
+          <h3 class="text-lg font-bold mb-2 text-blue-700 text-center">Імунодефіцити</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Часті інфекційні захворювання</li>
+            <li>• Тривалі періоди відновлення</li>
+            <li>• Хронічна втома</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-red-100 equal-height-card fade-in" style="animation-delay:.2s">
+          <div class="text-3xl mb-2 text-center">❤️</div>
+          <h3 class="text-lg font-bold mb-2 text-red-700 text-center">Серцево-судинні проблеми</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Гіпертонія</li>
+            <li>• Атеросклероз</li>
+            <li>• Запальні процеси</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-green-100 equal-height-card fade-in" style="animation-delay:.25s">
+          <div class="text-3xl mb-2 text-center">🌿</div>
+          <h3 class="text-lg font-bold mb-2 text-green-700 text-center">Алергічні реакції</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Сезонна алергія</li>
+            <li>• Астма</li>
+            <li>• Екзема та дерматити</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-yellow-100 equal-height-card fade-in" style="animation-delay:.3s">
+          <div class="text-3xl mb-2 text-center">⚡</div>
+          <h3 class="text-lg font-bold mb-2 text-yellow-700 text-center">Оксидативний стрес</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Хронічні захворювання</li>
+            <li>• Інтенсивні навантаження</li>
+            <li>• Вікові зміни</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-indigo-100 equal-height-card fade-in" style="animation-delay:.35s">
+          <div class="text-3xl mb-2 text-center">🧠</div>
+          <h3 class="text-lg font-bold mb-2 text-indigo-700 text-center">Нейропротекція</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Когнітивні порушення</li>
+            <li>• Нейродегенеративні зміни</li>
+            <li>• Стрес та перевтома</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Slide 7: Дозування ===== -->
+  <section class="slide relative items-center justify-center" id="slide-7" role="group" aria-label="Слайд 7 — Дозування">
+    <div class="medical-pattern"></div>
+    <div class="absolute bottom-4 right-4 z-10">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+    </div>
+
+    <div class="container-fixed h-full flex flex-col justify-center">
+      <h2 class="text-[clamp(20px,2.4vw,30px)] font-medium text-center mb-6 text-gray-700 fade-in" style="animation-delay:.05s">
+        Механізм дії кверцетину
+      </h2>
+
+      <div class="grid-fixed grid-2 items-center">
+        <div class="text-center fade-in" style="animation-delay:.1s">
+          <img src="assets/quercet.png" alt="Кверцет — упаковка"
+               class="w-full max-w-[480px] h-auto object-contain mx-auto modern-glow" />
+        </div>
+
+        <div class="space-y-4">
+          <div class="clinical-card border border-orange-200 p-6 fade-in" style="animation-delay:.15s">
+            <h3 class="text-lg font-bold text-orange-700 mb-2">📊 Стандартне дозування</h3>
+            <div class="text-3xl font-bold text-orange-600 mb-1">2 капсули</div>
+            <p class="text-sm text-gray-600 mb-1">на добу під час їжі</p>
+            <p class="text-xs text-gray-500">Разом 960 мг кверцетину + 40 мг пектину</p>
+          </div>
+
+          <div class="clinical-card border border-blue-200 p-6 fade-in" style="animation-delay:.2s">
+            <h3 class="text-lg font-bold text-blue-700 mb-2">⏰ Схема прийому</h3>
+            <div class="grid-fixed grid-2 text-center">
+              <div class="bg-blue-50 rounded-xl p-3">
+                <div class="text-lg font-bold text-blue-600">Ранок</div>
+                <div class="text-xs text-gray-600">1 капсула під час сніданку</div>
+              </div>
+              <div class="bg-blue-50 rounded-xl p-3">
+                <div class="text-lg font-bold text-blue-600">Вечір</div>
+                <div class="text-xs text-gray-600">1 капсула під час вечері</div>
+              </div>
             </div>
-            <div class="bg-blue-50 rounded-xl p-3">
-              <div class="text-lg font-bold text-blue-600">Вечір</div>
-              <div class="text-xs text-gray-600">1 капсула під час вечері</div>
+          </div>
+
+          <div class="clinical-card border border-green-200 p-6 fade-in" style="animation-delay:.25s">
+            <h3 class="text-lg font-bold text-green-700 mb-2">📅 Тривалість курсу</h3>
+            <div class="flex items-center justify-between gap-4">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600">60 днів</div>
+                <div class="text-xs text-gray-600">мінімальний курс</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600">90 днів</div>
+                <div class="text-xs text-gray-600">оптимальний курс</div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="clinical-card bg-white rounded-2xl shadow-lg border border-green-200 p-6">
-          <h3 class="text-lg font-bold text-green-700 mb-3">📅 Тривалість курсу</h3>
-          <div class="flex items-center justify-between">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-green-600">60 днів</div>
-              <div class="text-xs text-gray-600">мінімальний курс</div>
-            </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-green-600">90 днів</div>
-              <div class="text-xs text-gray-600">оптимальний курс</div>
-            </div>
-          </div>
+  <!-- ===== Slide 8: Переваги ===== -->
+  <section class="slide items-center justify-center" id="slide-8" role="group" aria-label="Слайд 8 — Переваги">
+    <div class="medical-pattern"></div>
+    <div class="absolute bottom-4 right-4 z-10">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+    </div>
+
+    <div class="container-fixed h-full flex flex-col justify-center">
+      <h2 class="text-[clamp(20px,2.4vw,30px)] font-medium text-center mb-6 text-gray-700 fade-in" style="animation-delay:.05s">
+        Переваги Кверцету
+      </h2>
+
+      <div class="grid-fixed grid-3">
+        <!-- 6 карточек преимуществ -->
+        <div class="clinical-card border border-indigo-100 equal-height-card fade-in" style="animation-delay:.1s">
+          <div class="text-3xl mb-2 text-center">🔬</div>
+          <h3 class="text-lg font-bold mb-2 text-indigo-700 text-center">Науково обґрунтовано</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Понад 100 клінічних досліджень</li>
+            <li>• Доказова медицина</li>
+            <li>• Міжнародні стандарти</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-green-100 equal-height-card fade-in" style="animation-delay:.15s">
+          <div class="text-3xl mb-2 text-center">🌿</div>
+          <h3 class="text-lg font-bold mb-2 text-green-700 text-center">Натуральний склад</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Рослинне походження</li>
+            <li>• Без синтетичних добавок</li>
+            <li>• Екологічно чисто</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-blue-100 equal-height-card fade-in" style="animation-delay:.2s">
+          <div class="text-3xl mb-2 text-center">✅</div>
+          <h3 class="text-lg font-bold mb-2 text-blue-700 text-center">Високий профіль безпеки</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Мінімальні побічні ефекти</li>
+            <li>• Сумісність з іншими препаратами</li>
+            <li>• Тривале застосування</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-purple-100 equal-height-card fade-in" style="animation-delay:.25s">
+          <div class="text-3xl mb-2 text-center">🚀</div>
+          <h3 class="text-lg font-bold mb-2 text-purple-700 text-center">Швидка дія</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Результат з перших днів</li>
+            <li>• Покращення самопочуття</li>
+            <li>• Збільшення енергії</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-orange-100 equal-height-card fade-in" style="animation-delay:.3s">
+          <div class="text-3xl mb-2 text-center">💊</div>
+          <h3 class="text-lg font-bold mb-2 text-orange-700 text-center">Зручність прийому</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Лише 2 капсули на день</li>
+            <li>• Компактна упаковка</li>
+            <li>• Довгий термін зберігання</li>
+          </ul>
+        </div>
+
+        <div class="clinical-card border border-red-100 equal-height-card fade-in" style="animation-delay:.35s">
+          <div class="text-3xl mb-2 text-center">💰</div>
+          <h3 class="text-lg font-bold mb-2 text-red-700 text-center">Економічно вигідно</h3>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li>• Оптимальне співвідношення ціна/якість</li>
+            <li>• Менше витрат на лікування</li>
+            <li>• Профілактика дорогих захворювань</li>
+          </ul>
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ===== Slide 9: Підсумок ===== -->
+  <section class="slide items-center justify-center" id="slide-9" role="group" aria-label="Слайд 9 — Ефективність">
+    <div class="medical-pattern"></div>
+    <div class="absolute bottom-4 right-4 z-10">
+      <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-14 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
+    </div>
+
+    <div class="container-fixed h-full flex flex-col justify-center">
+      <h2 class="text-[clamp(22px,2.8vw,36px)] font-bold text-center mb-6 text-gray-900 fade-in" style="animation-delay:.05s">
+        Ефективність кверцетину
+      </h2>
+
+      <div class="grid-fixed grid-4 mb-6">
+        <div class="clinical-card border border-blue-200 text-center equal-height-card fade-in" style="animation-delay:.1s">
+          <div class="text-3xl mb-2 text-blue-600">🦠</div>
+          <h3 class="text-lg font-semibold mb-2 text-blue-700">Противірусна дія</h3>
+          <div class="text-3xl font-bold text-blue-600 mb-1 counter" data-target="94">0</div>
+          <p class="text-sm text-gray-600">% ефективність</p>
+        </div>
+        <div class="clinical-card border border-green-200 text-center equal-height-card fade-in" style="animation-delay:.15s">
+          <div class="text-3xl mb-2 text-green-600">💪</div>
+          <h3 class="text-lg font-semibold mb-2 text-green-700">Імуномодуляція</h3>
+          <div class="text-3xl font-bold text-green-600 mb-1 counter" data-target="88">0</div>
+          <p class="text-sm text-gray-600">% покращення</p>
+        </div>
+        <div class="clinical-card border border-red-200 text-center equal-height-card fade-in" style="animation-delay:.2s">
+          <div class="text-3xl mb-2 text-red-600">❤️</div>
+          <h3 class="text-lg font-semibold mb-2 text-red-700">Кардіопротекція</h3>
+          <div class="text-3xl font-bold text-red-600 mb-1 counter" data-target="92">0</div>
+          <p class="text-sm text-gray-600">% покращення</p>
+        </div>
+        <div class="clinical-card border border-orange-200 text-center equal-height-card fade-in" style="animation-delay:.25s">
+          <div class="text-3xl mb-2 text-orange-600">⚡</div>
+          <h3 class="text-lg font-semibold mb-2 text-orange-700">Антиоксидантна дія</h3>
+          <div class="text-3xl font-bold text-orange-600 mb-1 counter" data-target="96">0</div>
+          <p class="text-sm text-gray-600">% активність</p>
+        </div>
+      </div>
+
+      <div class="grid-fixed grid-4 mb-4">
+        <div class="bg-white rounded-xl shadow-md border border-gray-200 text-center equal-height-small fade-in" style="animation-delay:.3s">
+          <div class="text-xl font-bold text-blue-600 counter" data-target="480">0</div>
+          <p class="text-xs text-gray-600">мг кверцетину</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-md border border-gray-200 text-center equal-height-small fade-in" style="animation-delay:.35s">
+          <div class="text-xl font-bold text-green-600 counter" data-target="20">0</div>
+          <p class="text-xs text-gray-600">мг пектину</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-md border border-gray-200 text-center equal-height-small fade-in" style="animation-delay:.4s">
+          <div class="text-xl font-bold text-orange-600 counter" data-target="2">0</div>
+          <p class="text-xs text-gray-600">капсули на день</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-md border border-gray-200 text-center equal-height-small fade-in" style="animation-delay:.45s">
+          <div class="text-xl font-bold text-purple-600 counter" data-target="60">0</div>
+          <p class="text-xs text-gray-600">днів курсу</p>
+        </div>
+      </div>
+
+      <p class="text-center text-[clamp(14px,1.7vw,18px)] text-gray-700 fade-in" style="animation-delay:.5s">
+        Науково підтверджена ефективність для зміцнення імунітету та захисту організму
+      </p>
+    </div>
+  </section>
+
+  <!-- Индикаторы -->
+  <div class="indicators" aria-label="Навігація по слайдах">
+    <div class="indicator active" onclick="showSlide(0)" aria-label="Слайд 1"></div>
+    <div class="indicator" onclick="showSlide(1)" aria-label="Слайд 2"></div>
+    <div class="indicator" onclick="showSlide(2)" aria-label="Слайд 3"></div>
+    <div class="indicator" onclick="showSlide(3)" aria-label="Слайд 4"></div>
+    <div class="indicator" onclick="showSlide(4)" aria-label="Слайд 5"></div>
+    <div class="indicator" onclick="showSlide(5)" aria-label="Слайд 6"></div>
+    <div class="indicator" onclick="showSlide(6)" aria-label="Слайд 7"></div>
+    <div class="indicator" onclick="showSlide(7)" aria-label="Слайд 8"></div>
+    <div class="indicator" onclick="showSlide(8)" aria-label="Слайд 9"></div>
   </div>
-</div>
 
+  <script>
+    /* корректная высота на мобилках */
+    function setAppHeight() {
+      document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
+    }
+    window.addEventListener('resize', setAppHeight);
+    window.addEventListener('orientationchange', setAppHeight);
+    setAppHeight();
 
-    <!-- Slide 8: Переваги та особливості -->
-    <div class="slide bg-indigo-50 items-center justify-center" id="slide-8">
-        <div class="absolute bottom-4 right-4 z-10">
-            <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-16 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
-        </div>
-        <div class="container-fixed h-full flex flex-col justify-center">
-            <h2 class="text-3xl font-medium text-center mb-8 text-gray-700">Переваги Кверцету</h2>
-            
-            <div class="grid-fixed grid-3">
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-indigo-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">🔬</div>
-                    <h3 class="text-lg font-bold mb-3 text-indigo-700 text-center">Науково обґрунтовано</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Понад 100 клінічних досліджень</li>
-                        <li>• Доказова медицина</li>
-                        <li>• Міжнародні стандарти</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-green-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">🌿</div>
-                    <h3 class="text-lg font-bold mb-3 text-green-700 text-center">Натуральний склад</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Рослинне походження</li>
-                        <li>• Без синтетичних добавок</li>
-                        <li>• Екологічно чисто</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-blue-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">✅</div>
-                    <h3 class="text-lg font-bold mb-3 text-blue-700 text-center">Високий профіль безпеки</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Мінімальні побічні ефекти</li>
-                        <li>• Сумісність з іншими препаратами</li>
-                        <li>• Тривале застосування</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-purple-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">🚀</div>
-                    <h3 class="text-lg font-bold mb-3 text-purple-700 text-center">Швидка дія</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Результат з перших днів</li>
-                        <li>• Покращення самопочуття</li>
-                        <li>• Збільшення енергії</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-orange-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">💊</div>
-                    <h3 class="text-lg font-bold mb-3 text-orange-700 text-center">Зручність прийому</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Лише 2 капсули на день</li>
-                        <li>• Компактна упаковка</li>
-                        <li>• Довгий термін зберігання</li>
-                    </ul>
-                </div>
-                
-                <div class="clinical-card bg-white rounded-2xl shadow-lg border border-red-100 equal-height-card">
-                    <div class="text-3xl mb-3 text-center">💰</div>
-                    <h3 class="text-lg font-bold mb-3 text-red-700 text-center">Економічно вигідно</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Оптимальне співвідношення ціна/якість</li>
-                        <li>• Менше витрат на лікування</li>
-                        <li>• Профілактика дорогих захворювань</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    let currentSlide = 0;
+    const slides = () => document.querySelectorAll('.slide');
+    const indicators = () => document.querySelectorAll('.indicator');
 
-    <!-- Slide 9: Підсумок ефективності -->
-    <div class="slide bg-gray-50 items-center justify-center" id="slide-9">
-        <div class="absolute bottom-4 right-4 z-10">
-            <img src="assets/logo.png" alt="Boiko Clinic Logo" class="h-16 w-auto opacity-90 shadow-lg rounded-lg bg-white p-2">
-        </div>
-        <div class="container-fixed h-full flex flex-col justify-center">
-            <h2 class="text-4xl font-bold text-center mb-8 text-gray-900">Ефективність кверцетину</h2>
-            
-            <div class="grid-fixed grid-4 mb-8">
-                <div class="bg-white rounded-2xl shadow-lg border border-blue-200 text-center equal-height-card">
-                    <div class="text-3xl mb-3 text-blue-600">🦠</div>
-                    <h3 class="text-lg font-semibold mb-3 text-blue-700">Противірусна дія</h3>
-                    <div class="text-3xl font-bold text-blue-600 mb-2 counter" data-target="94">0</div>
-                    <p class="text-sm text-gray-600">% ефективність</p>
-                </div>
-                
-                <div class="bg-white rounded-2xl shadow-lg border border-green-200 text-center equal-height-card">
-                    <div class="text-3xl mb-3 text-green-600">💪</div>
-                    <h3 class="text-lg font-semibold mb-3 text-green-700">Імуномодуляція</h3>
-                    <div class="text-3xl font-bold text-green-600 mb-2 counter" data-target="88">0</div>
-                    <p class="text-sm text-gray-600">% покращення</p>
-                </div>
-                
-                <div class="bg-white rounded-2xl shadow-lg border border-red-200 text-center equal-height-card">
-                    <div class="text-3xl mb-3 text-red-600">❤️</div>
-                    <h3 class="text-lg font-semibold mb-3 text-red-700">Кардіопротекція</h3>
-                    <div class="text-3xl font-bold text-red-600 mb-2 counter" data-target="92">0</div>
-                    <p class="text-sm text-gray-600">% покращення</p>
-                </div>
-                
-                <div class="bg-white rounded-2xl shadow-lg border border-orange-200 text-center equal-height-card">
-                    <div class="text-3xl mb-3 text-orange-600">⚡</div>
-                    <h3 class="text-lg font-semibold mb-3 text-orange-700">Антиоксидантна дія</h3>
-                    <div class="text-3xl font-bold text-orange-600 mb-2 counter" data-target="96">0</div>
-                    <p class="text-sm text-gray-600">% активність</p>
-                </div>
-            </div>
-            
-            <!-- Додаткова інформація -->
-            <div class="grid-fixed grid-4 mb-6">
-                <div class="bg-white rounded-xl shadow-md border border-gray-200 text-center equal-height-small">
-                    <div class="text-xl font-bold text-blue-600 counter" data-target="480">0</div>
-                    <p class="text-xs text-gray-600">мг кверцетину</p>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-md border border-gray-200 text-center equal-height-small">
-                    <div class="text-xl font-bold text-green-600 counter" data-target="20">0</div>
-                    <p class="text-xs text-gray-600">мг пектину</p>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-md border border-gray-200 text-center equal-height-small">
-                    <div class="text-xl font-bold text-orange-600 counter" data-target="2">0</div>
-                    <p class="text-xs text-gray-600">капсули на день</p>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-md border border-gray-200 text-center equal-height-small">
-                    <div class="text-xl font-bold text-purple-600 counter" data-target="60">0</div>
-                    <p class="text-xs text-gray-600">днів курсу</p>
-                </div>
-            </div>
-            
-            <!-- Заключний текст -->
-            <div class="text-center">
-                <p class="text-lg text-gray-700">Науково підтверджена ефективність для зміцнення імунітету та захисту організму</p>
-            </div>
-        </div>
-    </div>
+    function showSlide(index) {
+      const s = slides();
+      const dots = indicators();
+      if (index < 0) index = s.length - 1;
+      if (index >= s.length) index = 0;
 
-    <!-- Індикатори слайдів -->
-    <div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
-        <div class="indicator active" onclick="showSlide(0)"></div>
-        <div class="indicator" onclick="showSlide(1)"></div>
-        <div class="indicator" onclick="showSlide(2)"></div>
-        <div class="indicator" onclick="showSlide(3)"></div>
-        <div class="indicator" onclick="showSlide(4)"></div>
-        <div class="indicator" onclick="showSlide(5)"></div>
-        <div class="indicator" onclick="showSlide(6)"></div>
-        <div class="indicator" onclick="showSlide(7)"></div>
-        <div class="indicator" onclick="showSlide(8)"></div>
-    </div>
+      s.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
 
-    <script>
-        let currentSlide = 0;
+      // активируем
+      const target = s[index];
+      target.classList.add('active');
 
-        function showSlide(index) {
-            const slides = document.querySelectorAll('.slide');
-            const indicators = document.querySelectorAll('.indicator');
-            
-            slides.forEach(slide => slide.classList.remove('active'));
-            indicators.forEach(indicator => indicator.classList.remove('active'));
-            
-            slides[index].classList.add('active');
-            indicators[index].classList.add('active');
-            
-            currentSlide = index;
-            
-            // Запускаем анимации для 9-го слайда
-            if (index === 8) {
-                setTimeout(() => {
-                    startSlide9Animations();
-                }, 100);
-            }
-        }
+      // перезапуск анимации появления элементов внутри
+      target.querySelectorAll('.fade-in').forEach((el, i) => {
+        el.style.animation = 'none';
+        // рефлоу
+        // eslint-disable-next-line no-unused-expressions
+        el.offsetHeight;
+        el.style.animation = `fadeIn .6s cubic-bezier(.25,.46,.45,.94) forwards`;
+        el.style.animationDelay = (i * 0.06) + 's';
+      });
 
-        function nextSlide() {
-            const nextIndex = (currentSlide + 1) % document.querySelectorAll('.slide').length;
-            showSlide(nextIndex);
-        }
+      dots[index]?.classList.add('active');
+      currentSlide = index;
 
-        function previousSlide() {
-            const prevIndex = currentSlide === 0 ? document.querySelectorAll('.slide').length - 1 : currentSlide - 1;
-            showSlide(prevIndex);
-        }
+      // анимация счётчиков на 9-м
+      if (index === 8) {
+        startCounters();
+      }
+    }
 
-        // Анімації лічильників для 9-го слайду
-        function startSlide9Animations() {
-            const counters = document.querySelectorAll('.counter');
-            
-            counters.forEach((counter, index) => {
-                const target = parseFloat(counter.getAttribute('data-target'));
-                const isFloat = counter.getAttribute('data-float') === 'true';
-                const duration = 1500;
-                const start = 0;
-                const startTime = Date.now();
-                const delay = index * 150;
-                
-                setTimeout(() => {
-                    function animate() {
-                        const elapsed = Date.now() - startTime;
-                        const progress = Math.min(elapsed / duration, 1);
-                        
-                        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-                        const current = start + (target - start) * easeOutCubic;
-                        
-                        if (isFloat) {
-                            counter.textContent = current.toFixed(1);
-                        } else {
-                            counter.textContent = Math.floor(current);
-                        }
-                        
-                        if (progress < 1) {
-                            requestAnimationFrame(animate);
-                        }
-                    }
-                    
-                    requestAnimationFrame(animate);
-                }, delay);
-            });
-        }
+    function nextSlide() { showSlide(currentSlide + 1); }
+    function previousSlide() { showSlide(currentSlide - 1); }
 
-        // Клавіатурна навігація
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowRight' || e.key === ' ') {
-                nextSlide();
-            } else if (e.key === 'ArrowLeft') {
-                previousSlide();
-            }
-        });
+    // клавиатура
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') previousSlide();
+    });
 
-        // Ініціалізація
-        showSlide(0);
-    </script>
+    // счётчики (как у вас, но устойчивее)
+    let countersPlayed = false;
+    function startCounters() {
+      if (countersPlayed) return;
+      countersPlayed = true;
+      const counters = document.querySelectorAll('.counter');
+      counters.forEach((counter, idx) => {
+        const target = parseFloat(counter.getAttribute('data-target')) || 0;
+        const isFloat = counter.getAttribute('data-float') === 'true';
+        const duration = 1400;
+        const start = 0;
+        const startTime = performance.now();
+        const delay = idx * 120;
+
+        setTimeout(() => {
+          function tick(now) {
+            const progress = Math.min((now - startTime) / duration, 1);
+            const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+            const val = start + (target - start) * easeOutCubic;
+            counter.textContent = isFloat ? val.toFixed(1) : Math.floor(val);
+            if (progress < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        }, delay);
+      });
+    }
+
+    // запуск
+    showSlide(0);
+  </script>
 </body>
 </html>
